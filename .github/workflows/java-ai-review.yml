@@ -12,7 +12,6 @@ jobs:
       pull-requests: write
       issues: write
 
-    # Node.js 20 경고 해결 및 환경 최적화
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -25,13 +24,10 @@ jobs:
       - name: Get Changed Java Files
         id: files
         run: |
-          # 한글 파일명 깨짐 방지
           git config --global core.quotepath false
-          
-          # 이번 커밋에서 추가(A)되거나 수정(M)된 자바 파일만 추출
+          # 추가(A)되거나 수정(M)된 자바 파일만 추출
           FILES=$(git diff --name-only --diff-filter=AM HEAD^ HEAD | grep '\.java$' || true)
           
-          # 다중 라인 출력을 위한 EOF 설정
           echo "changed_files<<EOF" >> $GITHUB_OUTPUT
           echo "$FILES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
@@ -42,31 +38,23 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # 파일 목록을 안전하게 한 줄씩 읽어서 처리
           echo "${{ steps.files.outputs.changed_files }}" | while IFS= read -r file; do
-            # 파일이 실제로 존재할 때만 실행
             if [ -f "$file" ]; then
               echo "--- Analyzing $file ---"
           
-              # 파일 내용 읽기
               CONTENT=$(cat "$file")
-          
-              # AI에게 보낼 프롬프트 구성
               PROMPT="당신은 Java 알고리즘 전문가입니다. 백준/프로그래머스 문제 풀이인 다음 코드를 분석하여 1. 시간/공간 복잡도, 2. 성능 최적화(BufferedReader 등), 3. 엣지 케이스를 한국어로 리뷰해 주세요. 마크다운 형식을 사용하세요. 코드 내용:\n\n$CONTENT"
           
-              # jq를 사용하여 안전하게 JSON 바디 생성
               JSON_BODY=$(jq -n --arg msg "$PROMPT" '{contents: [{parts: [{text: $msg}]}]}')
           
-              # 가장 안정적인 gemini-1.5-flash 모델 호출
-              RESPONSE=$(curl -s -X POST "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}" \
+              # [수정 포인트] v1beta -> v1 경로로 변경하여 404 에러 해결
+              RESPONSE=$(curl -s -X POST "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}" \
                   -H 'Content-Type: application/json' \
                   -d "$JSON_BODY")
 
-              # 응답 결과에서 리뷰 텍스트만 파싱
               REVIEW=$(echo "$RESPONSE" | jq -r '.candidates[0].content.parts[0].text // empty')
           
               if [ -n "$REVIEW" ] && [ "$REVIEW" != "null" ]; then
-                # GitHub CLI를 사용하여 커밋 댓글 등록
                 gh api \
                   --method POST \
                   -H "Accept: application/vnd.github+json" \
@@ -74,7 +62,6 @@ jobs:
                   -f body="$REVIEW"
                 echo "Successfully reviewed $file"
               else
-                # 실패 시 로그 출력
                 echo "AI Response Failed for $file. Response: $RESPONSE"
               fi
             fi
