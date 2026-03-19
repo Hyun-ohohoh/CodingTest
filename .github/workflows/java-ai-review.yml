@@ -21,9 +21,14 @@ jobs:
       - name: Get Changed Java Files
         id: files
         run: |
-          # 수정된 자바 파일 목록 추출
-          FILES=$(git diff --name-only HEAD^ HEAD | grep '\.java$' | xargs || true)
-          echo "changed_files=$FILES" >> $GITHUB_OUTPUT
+          git config --global core.quotepath false
+          # 변경된 파일 목록 추출
+          FILES=$(git diff --name-only --diff-filter=AM HEAD^ HEAD | grep '\.java$' || true)
+          
+          # 다중 라인 출력을 위한 EOF 설정
+          echo "changed_files<<EOF" >> $GITHUB_OUTPUT
+          echo "$FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Gemini Review
         if: steps.files.outputs.changed_files != ''
@@ -31,32 +36,21 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          for file in ${{ steps.files.outputs.changed_files }}; do
+          # 파일 목록을 한 줄씩 읽어서 처리
+          echo "${{ steps.files.outputs.changed_files }}" | while read -r file; do
             if [ -f "$file" ]; then
               echo "--- Analyzing $file ---"
-          
-              # 파일 내용 읽기
               CONTENT=$(cat "$file")
-          
-              # 설명 없이 동작만 명시한 프롬프트 구성
-              PROMPT="당신은 Java 알고리즘 전문가입니다. 백준/프로그래머스 문제 풀이인 다음 코드를 분석하여 1. 시간/공간 복잡도, 2. 성능 최적화(BufferedReader 등), 3. 엣지 케이스를 한국어로 리뷰해 주세요. 마크다운 형식을 사용하세요. 코드 내용:\n\n$CONTENT"
-          
-              # JSON 바디 생성
+              PROMPT="당신은 Java 알고리즘 전문가입니다. 백준/프로그래머스 문제 풀이인 다음 코드를 분석하여 1. 시간/공간 복잡도, 2. 성능 최적화, 3. 엣지 케이스를 한국어로 리뷰해 주세요. 마크다운 형식을 사용하세요. 코드 내용:\n\n$CONTENT"
               JSON_BODY=$(jq -n --arg msg "$PROMPT" '{contents: [{parts: [{text: $msg}]}]}')
           
-              # 알려주신 gemini-2.5-flash-lite 모델 주소 적용
-              RESPONSE=$(curl -s -X POST "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${GEMINI_API_KEY}" \
+              RESPONSE=$(curl -s -X POST "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${GEMINI_API_KEY}" \
                   -H 'Content-Type: application/json' \
                   -d "$JSON_BODY")
-
-              # 응답 결과 로그 출력
-              echo "Raw Response: $RESPONSE"
           
-              # 리뷰 파싱
               REVIEW=$(echo "$RESPONSE" | jq -r '.candidates[0].content.parts[0].text // empty')
           
               if [ -n "$REVIEW" ] && [ "$REVIEW" != "null" ]; then
-                # 커밋 댓글 등록
                 gh api \
                   --method POST \
                   -H "Accept: application/vnd.github+json" \
