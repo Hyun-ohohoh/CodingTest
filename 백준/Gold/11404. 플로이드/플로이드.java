@@ -4,8 +4,16 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 /**
- * 플로이드 - 워셜
- */
+ *  * [플로이드-워셜 알고리즘]
+ *  * 1. 목적: 모든 정점 쌍(N:N) 사이의 최단 경로 구하기
+ *  * 2. 방식: 거쳐가는 정점(k)을 기준으로 모든 i->j 경로를 갱신 (DP 기반)
+ *  * 3. 시간 복잡도: O(V^3)
+ *  * 4. 특징:
+ *  * - 인접 행렬(2D Array) 사용
+ *  * - k(경유지) 루프가 가장 바깥쪽에 위치 (거-시-도 순서)
+ *  * - INF 설정 시 오버플로우 주의 및 도달 불가능 경로(0) 처리 필수
+ *  */
+ 
 public class Main {
 
     public static void main(String[] args) throws IOException {
