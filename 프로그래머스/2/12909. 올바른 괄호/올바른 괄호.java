@@ -1,0 +1,27 @@
+import java.util.*;
+// Gemini Review Test
+
+class Solution {
+    boolean solution(String s) {
+        boolean answer;
+        
+        Deque<Character> stack = new ArrayDeque<>();
+        
+        for(int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if(c == '(') {
+                stack.push(c);
+            } else {
+                if(stack.isEmpty()) {
+                    return false;
+                }
+                
+                stack.pop();
+            }
+        }
+        
+        answer = stack.isEmpty();
+
+        return answer;
+    }
+}
