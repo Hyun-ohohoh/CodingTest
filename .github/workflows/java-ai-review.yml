@@ -47,9 +47,9 @@ jobs:
           
               JSON_BODY=$(jq -n --arg msg "$PROMPT" '{contents: [{parts: [{text: $msg}]}]}')
           
-              RESPONSE=$(curl -s -X POST "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}" \
-                  -H 'Content-Type: application/json' \
-                  -d "$JSON_BODY")
+              RESPONSE=$(curl -s -X POST "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${GEMINI_API_KEY}" \
+              -H 'Content-Type: application/json' \
+              -d "$JSON_BODY")
           
               REVIEW=$(echo "$RESPONSE" | jq -r '.candidates[0].content.parts[0].text // empty')
           
