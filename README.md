@@ -3,11 +3,12 @@
 알고리즘 문제 풀이 기록을 관리하는 저장소입니다.  
 **Java**를 주력으로 사용하며, 효율적인 로직 설계와 **AI Code Review**를 통한 코드 최적화를 지향합니다.
 
-## 🏆 Online Judge Profiles
-| Platform | Profile / Link |
-| :--- | :--- |
-| **Baekjoon (BOJ)** | [![Solved.ac Profile](http://mazassumnida.wtf/api/v2/generate_badge?boj=nho1108)](https://solved.ac/nho1108) |
-| **Programmers** | [Coding Test Practice](https://programmers.co.kr/learn/challenges) |
+## 🏆 Online Judge Profile
+<div align="center">
+  <a href="https://solved.ac/nho1108">
+    <img src="http://mazassumnida.wtf/api/v2/generate_badge?boj=nho1108" alt="Solved.ac Profile" />
+  </a>
+</div>
 
 ## 📂 Repository Structure
 플랫폼별 특성에 맞춰 디렉토리를 관리하며, **백준허브(BaekjoonHub)**와 연동하여 업데이트합니다.
