@@ -1,22 +1,36 @@
-# 📘 Baekjoon Algorithm Study
+# 📚 Algorithm Archive 👍
 
-백준 온라인 저지(BOJ) 알고리즘 문제 풀이 기록 저장소입니다.  
-**Java**를 주력 언어로 사용하며, 알고리즘 유형별로 디렉토리를 나누어 체계적으로 학습하고 있습니다.
+알고리즘 문제 풀이 기록을 관리하는 저장소입니다.  
+**Java**를 주력으로 사용하며, 효율적인 로직 설계와 **AI Code Review**를 통한 코드 최적화를 지향합니다.
 
-## 🏆 Solved.ac Profile
-[![Solved.ac Profile](http://mazassumnida.wtf/api/v2/generate_badge?boj=nho1108)](https://solved.ac/nho1108)
+## 🏆 Online Judge Profiles
+| Platform | Profile / Link |
+| :--- | :--- |
+| **Baekjoon (BOJ)** | [![Solved.ac Profile](http://mazassumnida.wtf/api/v2/generate_badge?boj=nho1108)](https://solved.ac/nho1108) |
+| **Programmers** | [Coding Test Practice](https://programmers.co.kr/learn/challenges) |
 
 ## 📂 Repository Structure
-문제의 유형(Topic)과 난이도에 따라 폴더를 분류하여 관리합니다.
+플랫폼별 특성에 맞춰 디렉토리를 관리하며, **백준허브(BaekjoonHub)**와 연동하여 업데이트합니다.
 
-## 🤖 Automated AI Code Review
-효율적인 알고리즘 학습을 위해 **GitHub Actions**와 **Google Gemini AI**를 연동한 자동 코드 리뷰 시스템을 구축하였습니다.
+* `백준/`: 백준 온라인 저지 문제 풀이 기록
+* `프로그래머스/`: 프로그래머스 문제 풀이 기록
+* `src/`: 초기 수동 업로드 및 이전 풀이 기록 (Legacy)
+* `.github/workflows/`: Gemini AI 자동 코드 리뷰 시스템
 
-- **Trigger**: `main` 브랜치에 `.java` 파일 Push 시 자동 실행
-- **Focus**: 
-  - **Complexity**: 시간/공간 복잡도($O$ 표기법) 분석
-  - **Optimization**: `BufferedReader`, `StringBuilder` 등 Java 성능 최적화 제안
-  - **Edge Case**: 놓치기 쉬운 예외 상황 및 알고리즘 결함 분석
-- **Goal**: AI 사수의 실시간 피드백을 통한 문제 해결 능력 및 코드 품질 향상
+## 🤖 Automated AI Code Review System
+학습 효율을 높이기 위해 **GitHub Actions**와 **Google Gemini AI**를 연동한 실시간 코드 리뷰 시스템을 운영 중입니다. `main` 브랜치에 코드가 `push`되면 AI가 즉시 분석을 수행합니다.
+
+### 🔍 Review Focus
+* **Complexity Analysis**: 시간 및 공간 복잡도($O$ 표기법) 분석 및 개선 제안.
+* **Performance Optimization**: `BufferedReader`, `StringBuilder` 등을 활용한 Java 성능 최적화.
+* **Robustness & Edge Case**: 자료형 선택, 오버플로우 방지, 예외 상황 처리 분석.
+* **Code Quality**: 가독성 높은 변수명과 효율적인 클래스 구조 제안.
+
+## 🛠️ Tech Stack & Tools
+* **Language**: Java
+* **IDE**: IntelliJ IDEA Ultimate
+* **Sync Tool**: [BaekjoonHub](https://github.com/BaekjoonHub/BaekjoonHub)
+* **AI Engine**: `Gemini 2.5 Flash Lite` (via GitHub Actions)
 
 ---
+*Last Updated: 2026-03-21*
