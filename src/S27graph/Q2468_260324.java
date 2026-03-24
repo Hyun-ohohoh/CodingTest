@@ -32,7 +32,7 @@ public class Q2468_260324 {
         }
     }
 
-    static void search(int row, int col, int height) {
+    static void search(int row, int col) {
         visited[row][col] = 1;
 
         for(int i = 0; i < 4; i++) {
@@ -44,7 +44,7 @@ public class Q2468_260324 {
             }
 
             if(drown[nextRow][nextCol] == 0 && visited[nextRow][nextCol] == 0) {
-                search(nextRow, nextCol, height);
+                search(nextRow, nextCol);
             }
         }
 
@@ -82,7 +82,7 @@ public class Q2468_260324 {
             for(int i = 0; i < n; i++) {
                 for(int j = 0; j < n; j++) {
                     if(drown[i][j] == 0 && visited[i][j] == 0) {
-                        search(i, j, height);
+                        search(i, j);
                         count++;
                     }
                 }
