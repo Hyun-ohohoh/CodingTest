@@ -15,7 +15,7 @@
 
 * `백준/`: 백준 온라인 저지 문제 풀이 기록
 * `프로그래머스/`: 프로그래머스 문제 풀이 기록
-* **SWEA/**: SW Expert Academy 문제 풀이 기록
+* `SWEA/`: SW Expert Academy 문제 풀이 기록
 * `src/`: 백준허브 연동 전 과거 풀이 및 해결 중인 문제(Attempt)의 트러블슈팅 기록
 * `.github/workflows/`: Gemini AI 자동 코드 리뷰 시스템
 
