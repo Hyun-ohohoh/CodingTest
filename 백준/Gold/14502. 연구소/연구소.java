@@ -7,75 +7,80 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    static int n, m;
+    static int row;
+    static int col;
+    static int wallCount;
+    static int max = Integer.MIN_VALUE;
+
     static int[][] arr;
     static int[][] bfsArr;
-    static int[][] visited;
-    static int count;
-    static int result;
 
-    static int[] dx = {1, -1, 0, 0};
-    static int[] dy = {0, 0, 1, -1};
+    static int[] dRow = {1, -1, 0, 0};
+    static int[] dCol = {0, 0, 1, -1};
+
 
     static void bfs() {
+        int[][] visited = new int[row+1][col+1];
         Deque<int[]> queue = new ArrayDeque<>();
-        visited = new int[n][m];
-        for(int i = 0; i < n; i++) {
-            for(int j = 0; j < m; j++) {
-                bfsArr[i][j] = arr[i][j];
+
+        for(int i = 1; i <= row; i++) {
+            for(int j = 1; j <= col; j++) {
                 if(bfsArr[i][j] == 2){
-                    queue.offer(new int[] {i, j});
                     visited[i][j] = 1;
+                    queue.offer(new int[] {i, j});
                 }
             }
         }
 
         while(!queue.isEmpty()) {
             int[] current = queue.poll();
-            int currentX = current[0];
-            int currentY = current[1];
+            int currentRow = current[0];
+            int currentCol = current[1];
 
             for(int i = 0; i < 4; i++) {
-                int nextX = currentX + dx[i];
-                int nextY = currentY + dy[i];
+                int nextRow = currentRow + dRow[i];
+                int nextCol = currentCol + dCol[i];
 
-                if(nextX >= n || nextY >= m || nextX < 0 || nextY < 0) {
+                if(nextRow > row || nextCol > col || nextRow <= 0 || nextCol <= 0) {
                     continue;
                 }
 
-                if(bfsArr[nextX][nextY] == 0) {
-                    visited[nextX][nextY] = 1;
-                    bfsArr[nextX][nextY] = 2;
-                    queue.offer(new int[] {nextX, nextY});
+                if(bfsArr[nextRow][nextCol] == 0 && visited[nextRow][nextCol] == 0) {
+                    visited[nextRow][nextCol] = 1;
+                    queue.offer(new int[] {nextRow, nextCol});
                 }
             }
         }
 
-        int localResult = 0;
-        for(int i = 0; i < n; i++) {
-            for(int j = 0; j < m; j++) {
-                if(bfsArr[i][j] == 0) {
-                    localResult++;
+        int count = 0;
+        for(int i = 1; i <= row; i++) {
+            for(int j = 1; j <= col; j++) {
+                if(bfsArr[i][j] == 0 && visited[i][j] == 0) {
+                    count += 1;
                 }
             }
         }
 
-        result = Math.max(localResult, result);
+        max = Math.max(count, max);
+
     }
 
-    static void selectWall(int count) {
-        if(count == 3) {
+    static void selectWall() {
+        if(wallCount == 3) {
             bfs();
             return;
         }
 
-        for(int i = 0; i < n; i++) {
-            for(int j = 0; j < m; j++){
-                if(arr[i][j] == 0) {
-                    arr[i][j] = 1;
-                    selectWall(count+1);
-                    arr[i][j] = 0;
+        for(int i = 1; i <= row; i++) {
+            for(int j = 1; j <= col; j++) {
+                if(bfsArr[i][j] == 0) {
+                    bfsArr[i][j] = 1;
+                    wallCount += 1;
+                    selectWall();
+                    bfsArr[i][j] = 0;
+                    wallCount -= 1;
                 }
+
             }
         }
     }
@@ -87,29 +92,23 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         StringTokenizer st = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(st.nextToken());
 
-        arr = new int[n][m];
-        bfsArr = new int[n][m];
-        count = 0;
+        row = Integer.parseInt(st.nextToken());
+        col = Integer.parseInt(st.nextToken());
 
-        for(int i = 0; i < n; i++) {
-            for(int j = 0; j < m; j++) {
-                arr[i][j] = 1;
-            }
-        }
+        arr = new int[row+1][col+1];
+        bfsArr = new int[row+1][col+1];
 
-        for(int i = 0; i < n; i++) {
+        for(int i = 1; i <= row; i++) {
             st = new StringTokenizer(br.readLine());
-            for(int j = 0; j < m; j++) {
+            for(int j = 1; j <= col; j++) {
                 arr[i][j] = Integer.parseInt(st.nextToken());
+                bfsArr[i][j] = arr[i][j];
             }
         }
 
-        selectWall(0);
+        selectWall();
 
-        System.out.println(result);
-
+        System.out.println(max);
     }
 }
