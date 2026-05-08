@@ -13,10 +13,12 @@ class Solution {
                 result[index] = i - index;
             }
             stack.push(i);
-
-            result[i] = prices.length - 1 - i;
         }
-        
+
+        while(!stack.isEmpty()) {
+            int index = stack.pop();
+            result[index] = prices.length - 1 - index;
+        }
 
         return result;
     }
