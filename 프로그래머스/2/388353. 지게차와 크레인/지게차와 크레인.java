@@ -62,6 +62,7 @@ class Solution {
     void bfs(String[] storage, String request, int startRow, int startCol, List<int[]> remove) {
         Deque<int[]> queue = new ArrayDeque<>();
 
+        visited[startRow][startCol] = true;
 
         if(storage[startRow].charAt(startCol) == request.charAt(0)) {
             remove.add(new int[] {startRow, startCol});
@@ -114,7 +115,4 @@ class Solution {
 
 
 }
-
-
-
 
