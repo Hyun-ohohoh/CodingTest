@@ -3,7 +3,7 @@ class Solution {
 
         int rectangle = brown + yellow;
 
-        for(int width = 3; width <= Math.sqrt(rectangle); width++) {
+        for(int width = 3; width <= rectangle; width++) {
             if(rectangle % width == 0) {
                 int row = rectangle / width;
                 if(yellow == (row-2) * (width-2)) {
