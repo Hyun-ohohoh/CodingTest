@@ -1,56 +1,64 @@
 import java.util.*;
 
-// Re-upload Test Final
 class Solution {
-    
-    List<Integer>[] adjList;
-    int[] distance;
-    int maxDistance;
-    
+    static List<List<Integer>> adjList;
     public int solution(int n, int[][] edge) {
-        
-        adjList = new ArrayList[n+1];
-        for(int i = 1; i <= n; i++) {
-            adjList[i] = new ArrayList<>();
+        adjList = new ArrayList<>();
+        for(int i = 0; i <= n; i++) {
+            adjList.add(new ArrayList<>());
         }
-        
-        distance = new int[n+1];
-        Arrays.fill(distance, -1);
-        
-        for(int[] e : edge) {
-            adjList[e[0]].add(e[1]);
-            adjList[e[1]].add(e[0]);
-        }    
-        
-        bfs(1);
-        
-        int count = 0;
-        
-        for(int i = 1; i <= n; i++) {
-            if(distance[i] == maxDistance) {
-                count++;
+
+        for(int i = 0; i < edge.length; i++) {
+            int[] current = edge[i];
+            int from = current[0];
+            int to = current[1];
+
+            adjList.get(from).add(to);
+            adjList.get(to).add(from);
+        }
+
+        boolean[] visited = new boolean[n+1];
+        int[] distance = new int[n+1];
+
+        bfs(1, visited, distance);
+
+        int result = 0;
+        int maxDistance = 0;
+
+        for(int i : distance) {
+            if(i > maxDistance) {
+                maxDistance = i;
             }
         }
-        
-        return count;
-        
+
+        for(int i : distance) {
+            if(i == maxDistance) {
+                result += 1;
+            }
+        }
+
+        return result;
+
     }
-    
-    public void bfs(int start) {
+
+    void bfs(int node, boolean[] visited, int[] distance) {
         Deque<Integer> queue = new ArrayDeque<>();
-        queue.offer(start);
-        distance[start] = 0;
-        
+        visited[node] = true;
+        distance[node] = 0;
+        queue.offer(node);
+
         while(!queue.isEmpty()) {
             int current = queue.poll();
-            
-            for(int next : adjList[current]) {
-                if(distance[next] == -1) {
-                    distance[next] = distance[current] + 1;
-                    maxDistance = Math.max(distance[next], maxDistance);
-                    queue.offer(next);
+            List<Integer> list = adjList.get(current);
+
+            for(Integer i : list) {
+                if(!visited[i]) {
+                    visited[i] = true;
+                    distance[i] = distance[current] + 1;
+                    queue.offer(i);
                 }
             }
         }
+
     }
 }
