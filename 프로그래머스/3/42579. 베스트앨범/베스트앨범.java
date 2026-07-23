@@ -4,42 +4,61 @@ class Solution {
 
      public int[] solution(String[] genres, int[] plays) {
 
-        Map<String, Integer> genreMap = new HashMap<>();
+        Map<String, Integer> genreCount = new HashMap<>();
 
         for(int i = 0; i < genres.length; i++) {
-            genreMap.merge(genres[i], plays[i], Integer::sum);
-        }
-
-        // Map으로는 정렬 못 함 -> 리스트로 변환
-        List<Map.Entry<String, Integer>> list = new ArrayList<>(genreMap.entrySet());
-        Collections.sort(list, (a, b) -> b.getValue() - a.getValue());
-
-        Map<String, List<int[]>> songsByGenre = new HashMap<>();
-        for(int i = 0; i < genres.length; i++) {
-            String genre = genres[i];
-            if(!songsByGenre.containsKey(genre)) {
-                songsByGenre.put(genre, new ArrayList<>());
-            }
-            songsByGenre.get(genre).add(new int[]{i, plays[i]});
-        }
-
-
-        List<Integer> result = new ArrayList<>();
-        for(Map.Entry<String, Integer> entry : list) {
-            String genre = entry.getKey();
-            List<int[]> songs = songsByGenre.get(genre);
-            songs.sort((a, b) -> b[1] - a[1]); // 재생수 내림차순
-
-            for(int i = 0; i < Math.min(2, songs.size()); i++) { // songs.size()가 1일수도 있으니 Math.min으로
-                result.add(songs.get(i)[0]);
+            if (!genreCount.containsKey(genres[i])) {
+                genreCount.put(genres[i], plays[i]);
+            } else {
+                genreCount.put(genres[i], genreCount.get(genres[i]) + plays[i]);
             }
         }
 
-        int[] arr = new int[result.size()];
-        for(int i = 0; i < result.size(); i++) {
-            arr[i] = result.get(i);
+        List<Map.Entry<String, Integer>> genreSortList = new ArrayList<>();
+        for(Map.Entry<String, Integer> entry : genreCount.entrySet()) {
+            genreSortList.add(entry);
         }
-        return arr;
+        genreSortList.sort((a, b) -> b.getValue() - a.getValue());
+
+        Map<String, List<int[]>> songCount = new HashMap<>();
+        for(int i = 0; i < genres.length; i++) {
+            if (!songCount.containsKey(genres[i])) {
+                List<int[]> list = new ArrayList<>();
+                list.add(new int[] {i, plays[i]});
+                songCount.put(genres[i], list);
+            } else {
+                List<int[]> list = songCount.get(genres[i]);
+                list.add(new int[] {i, plays[i]});
+                songCount.put(genres[i], list);
+            }
+        }
+
+        for(Map.Entry<String, List<int[]>> entry : songCount.entrySet()) {
+            List<int[]> list = entry.getValue();
+            list.sort((a, b) -> b[1] - a[1]);
+        }
+
+        List<Integer> resultList = new ArrayList<>();
+        for(Map.Entry<String, Integer> genreEntry : genreSortList) {
+            String genre = genreEntry.getKey();
+            
+            for(Map.Entry<String, List<int[]>> songEntry : songCount.entrySet()) {
+                if(songEntry.getKey().equals(genre)) {
+                    List<int[]> playList = songEntry.getValue();
+                    resultList.add(playList.get(0)[0]);
+                    if(playList.size() >= 2) {
+                        resultList.add(playList.get(1)[0]);
+                    }
+                }
+            }
+        }
+        
+        int[] result = new int[resultList.size()];
+        for(int i = 0; i < resultList.size(); i++) {
+            result[i] = resultList.get(i);
+        }
+        
+        return result;
 
     }
 }
