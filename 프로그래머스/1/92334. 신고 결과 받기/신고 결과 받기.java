@@ -34,12 +34,7 @@ class Solution {
         }
 
         for(Map.Entry<String, Integer> entry : reportCount.entrySet()) {
-            boolean remove = false;
             if(entry.getValue() >= k) {
-                remove = true;
-            }
-
-            if(remove) {
                 for(Map.Entry<String, Set<String>> entry2 : reportMember.entrySet()) {
                     Set<String> set = entry2.getValue();
                     if(set.contains(entry.getKey())) {
@@ -56,11 +51,9 @@ class Solution {
         int[] result = new int[id_list.length];
         for(int i = 0; i < id_list.length; i++) {
             String id = id_list[i];
-            for(String key : reportMail.keySet()) {
-                if(key.equals(id)) {
-                    result[i] = reportMail.get(key);
-                }
-            }
+            // id값이 어차피 Map KeySet에 있으니 for문 순회 불필요
+            // getOrDefault로 최적화
+            result[i] = reportMail.getOrDefault(id, 0);
         }
 
         return result;
