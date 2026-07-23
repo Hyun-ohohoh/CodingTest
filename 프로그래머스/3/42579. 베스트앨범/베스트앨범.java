@@ -1,8 +1,7 @@
 import java.util.*;
 
 class Solution {
-
-     public int[] solution(String[] genres, int[] plays) {
+    public int[] solution(String[] genres, int[] plays) {
 
         Map<String, Integer> genreCount = new HashMap<>();
 
@@ -35,29 +34,30 @@ class Solution {
 
         for(Map.Entry<String, List<int[]>> entry : songCount.entrySet()) {
             List<int[]> list = entry.getValue();
-            list.sort((a, b) -> b[1] - a[1]);
+            list.sort((a, b) -> {
+                if(a[1] == b[1]) {
+                    return a[0] - b[0]; // play 수 같을 경우 번호 순
+                } 
+                return b[1] - a[1]; // play 많은 순
+            });
         }
 
         List<Integer> resultList = new ArrayList<>();
         for(Map.Entry<String, Integer> genreEntry : genreSortList) {
             String genre = genreEntry.getKey();
-            
-            for(Map.Entry<String, List<int[]>> songEntry : songCount.entrySet()) {
-                if(songEntry.getKey().equals(genre)) {
-                    List<int[]> playList = songEntry.getValue();
-                    resultList.add(playList.get(0)[0]);
-                    if(playList.size() >= 2) {
-                        resultList.add(playList.get(1)[0]);
-                    }
-                }
+            List<int[]> playList = songCount.get(genre);
+
+            resultList.add(playList.get(0)[0]);
+            if(playList.size() >= 2) {
+                resultList.add(playList.get(1)[0]);
             }
         }
-        
+
         int[] result = new int[resultList.size()];
         for(int i = 0; i < resultList.size(); i++) {
             result[i] = resultList.get(i);
         }
-        
+
         return result;
 
     }
