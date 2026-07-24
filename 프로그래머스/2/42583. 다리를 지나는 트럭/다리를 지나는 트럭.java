@@ -14,7 +14,6 @@ class Solution {
         int time = 0;
         int index = 0;
         int currentWeight = 0;
-
         while(index < truck_weights.length || currentWeight > 0) {
             time += 1;
             currentWeight -= bridge.poll();
@@ -22,12 +21,11 @@ class Solution {
             if(index < truck_weights.length && currentWeight + truck_weights[index] <= weight) {
                 bridge.offer(truck_weights[index]);
                 currentWeight += truck_weights[index];
-                index++;
+                index += 1;
             } else {
                 bridge.offer(0);
             }
         }
-
 
         return time;
 
