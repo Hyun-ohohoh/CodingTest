@@ -1,75 +1,74 @@
 import java.util.*;
 
 class Solution {
-    static int[] dx = {0, 0, 1, -1};
-    static int[] dy = {1, -1, 0, 0};
+    static int[] dRow = {0, 0, 1, -1};
+    static int[] dCol = {1, -1, 0, 0};
 
     public int[] solution(String[][] places) {
-
         int[] result = new int[places.length];
-        int idx = 0;
-        for (String[] room : places) {
+
+        int room = 0;
+        for(String[] place : places) {
             char[][] arr = new char[5][5];
 
-            for (int i = 0; i < 5; i++) {
-                String str = room[i];
-                for (int j = 0; j < 5; j++) {
-                    arr[i][j] = str.charAt(j);
+            for(int i = 0; i < 5; i++) {
+                for(int j = 0; j < 5; j++) {
+                    arr[i][j] = place[i].charAt(j);
                 }
             }
 
             int safe = 1;
-            for (int i = 0; i < 5; i++) {
-                for (int j = 0; j < 5; j++) {
-
-                    if (arr[i][j] == 'P') {
-                        boolean[][] visited = new boolean[5][5];
+            for(int i = 0; i < 5; i++) {
+                for(int j = 0; j < 5; j++) {
+                    if(arr[i][j] == 'P') {
+                        int[][] visited = new int[5][5];
                         int[][] distance = new int[5][5];
+
                         if(bfs(arr, i, j, visited, distance) == -1) {
                             safe = 0;
                         }
                     }
                 }
             }
-            result[idx] = safe;
-            idx += 1;
+
+            result[room] = safe;
+            room += 1;
         }
 
         return result;
     }
 
-    int bfs(char[][] arr, int i, int j, boolean[][] visited, int[][] distance) {
-        visited[i][j] = true;
-        distance[i][j] = 0;
-
+    int bfs(char[][] arr, int row, int col, int[][] visited, int[][] distance) {
+        visited[row][col] = 1;
         Deque<int[]> queue = new ArrayDeque<>();
-        queue.offer(new int[]{i, j});
+        queue.offer(new int[] {row, col});
 
-        while (!queue.isEmpty()) {
+        while(!queue.isEmpty()) {
             int[] current = queue.poll();
-            int currentX = current[0];
-            int currentY = current[1];
+            int currentRow = current[0];
+            int currentCol = current[1];
 
-            for (int k = 0; k < 4; k++) {
-                int nextX = currentX + dx[k];
-                int nextY = currentY + dy[k];
+            for(int i = 0; i < 4; i++) {
+                int nextRow = currentRow + dRow[i];
+                int nextCol = currentCol + dCol[i];
 
-                if (nextX >= 5 || nextY >= 5 || nextX < 0 || nextY < 0) {
+                if(nextRow < 0 || nextRow >= 5 || nextCol < 0 || nextCol >= 5) {
                     continue;
                 }
 
-                if (arr[nextX][nextY] == 'P' && !visited[nextX][nextY] && distance[currentX][currentY] + 1 <= 2) {
+                if(arr[nextRow][nextCol] == 'P' && visited[nextRow][nextCol] == 0 && distance[currentRow][currentCol] + 1 <= 2) {
                     return -1;
                 }
 
-                if (!visited[nextX][nextY] && arr[nextX][nextY] == 'O' && distance[currentX][currentY] + 1 <= 2) {
-                    visited[nextX][nextY] = true;
-                    queue.offer(new int[]{nextX, nextY});
-                    distance[nextX][nextY] = distance[currentX][currentY] + 1;
+                if(arr[nextRow][nextCol] == 'O' && visited[nextRow][nextCol] == 0 && distance[currentRow][currentCol] + 1 <= 2) {
+                    visited[nextRow][nextCol] = 1;
+                    distance[nextRow][nextCol] = distance[currentRow][currentCol] + 1;
+                    queue.offer(new int[] {nextRow, nextCol});
                 }
             }
         }
 
         return 1;
     }
+
 }
