@@ -57,13 +57,15 @@ public class Solution {
                     square[0] = new int[]{arr[i][j], arr[i][j + 1], arr[i][j + 2]};
                     square[1] = new int[]{arr[i + 1][j], arr[i + 1][j + 1], arr[i + 1][j + 2]};
                     square[2] = new int[]{arr[i + 2][j], arr[i + 2][j + 1], arr[i + 2][j + 2]};
+
+                    if(!checkSquare(square)) {
+                        result = 0;
+                    }
                 }
 
-                if(!checkSquare(square)) {
-                    result = 0;
-                }
+                
             }
-            
+
             System.out.println("#" + test_case + " " + result);
 
 
