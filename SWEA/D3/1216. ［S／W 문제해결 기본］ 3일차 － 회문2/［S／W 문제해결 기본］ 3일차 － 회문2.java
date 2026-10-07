@@ -18,38 +18,39 @@ public class Solution {
 		   표준입력 System.in 으로부터 스캐너를 만들어 데이터를 읽어옵니다.
 		 */
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int T;
-        T = 10;
+        int T = 10;
+        //T = Integer.parseInt(br.readLine());
 		/*
 		   여러 개의 테스트 케이스가 주어지므로, 각각을 처리합니다.
 		*/
 
         for (int test_case = 1; test_case <= T; test_case++) {
             int testNum = Integer.parseInt(br.readLine());
-            char[][] arrOrigin = new char[100][100]; // 기존 배열
-            char[][] arrNew = new char[100][100]; //가로 세로 뒤바꾼 배열
+            char[][] arr = new char[100][100];
+            char[][] arr2 = new char[100][100];
+
             for(int i = 0; i < 100; i++) {
                 String str = br.readLine();
                 for(int j = 0; j < 100; j++) {
-                    arrOrigin[i][j] = str.charAt(j);
-                    arrNew[j][i] = str.charAt(j);
+                    arr[i][j] = str.charAt(j);
+                    arr2[j][i] = arr[i][j];
                 }
             }
 
             int max = 0;
             for(int i = 0; i < 100; i++) {
-                char[] rowOrigin = arrOrigin[i];
-                char[] rowNew = arrNew[i];
+                char[] row1 = arr[i];
+                char[] row2 = arr2[i];
+
                 for(int start = 0; start < 100; start++) {
                     for(int len = 1; len <= 100 - start; len++) {
-                        int end = start + len - 1;
-                        if(isPalindrome(rowOrigin, start, end)) {
+                        if(isPalindrome(row1, start, len)) {
                             if(len > max) {
                                 max = len;
                             }
                         }
 
-                        if(isPalindrome(rowNew, start, end)) {
+                        if(isPalindrome(row2, start, len)) {
                             if(len > max) {
                                 max = len;
                             }
@@ -58,25 +59,23 @@ public class Solution {
                 }
             }
 
-            System.out.println("#" + testNum + " " + max);
-
-
-
-
+            System.out.println("#" + testNum  + " " + max);
         }
-
     }
 
-    static boolean isPalindrome(char[] row, int start, int end) {
+    static boolean isPalindrome(char[] row, int start, int len) {
         int left = start;
-        int right = end;
+        int right = start + len - 1;
         while(left < right) {
             if(row[left] != row[right]) {
                 return false;
             }
+
             left += 1;
             right -= 1;
         }
+
         return true;
     }
 }
+
