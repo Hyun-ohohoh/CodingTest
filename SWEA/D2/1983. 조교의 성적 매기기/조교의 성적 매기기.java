@@ -47,8 +47,8 @@ public class Solution {
 
             double resultScore = map.get(k);
             int resultRank = 1;
-            for(int i = 1; i <= list.size(); i++) {
-                if(map.get(i) > resultScore) {
+            for(int i = 0; i < list.size(); i++) {
+                if(list.get(i) > resultScore) {
                     resultRank += 1;
                 }
             }
