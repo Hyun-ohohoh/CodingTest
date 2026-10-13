@@ -46,24 +46,20 @@ public class Solution {
             Collections.sort(list, Collections.reverseOrder());
 
             double resultScore = map.get(k);
-            int resultRank = 0;
-            for(int i = 0; i < list.size(); i++) {
-                if(list.get(i) == resultScore) {
-                    resultRank = i + 1;
+            int resultRank = 1;
+            for(int i = 1; i <= list.size(); i++) {
+                if(map.get(i) > resultScore) {
+                    resultRank += 1;
                 }
             }
-            
+
             int gradeNum = num / 10;
-            int order = 0;
-            
-            int credit = 0;
-            while(order < resultRank) {
-                order += gradeNum;
-                credit += 1;
-            }
-            
-            System.out.println("#" + test_case + " " + scores[credit - 1]);
- 
+
+            int credit = (resultRank - 1) / gradeNum;
+
+            System.out.println("#" + test_case + " " + scores[credit]);
+
         }
     }
 }
+
