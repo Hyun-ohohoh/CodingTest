@@ -5,6 +5,14 @@ import java.util.*;
 
 public class Solution {
 
+    static char[][] arr;
+    static int row, col;
+    static int tankRow, tankCol, dir;
+    // 방향: U=0, D=1, L=2, R=3
+    static int[] dRow = {-1, 1, 0, 0};
+    static int[] dCol = { 0, 0, -1, 1};
+    static char[] tank = {'^', 'v', '<', '>'};
+
     public static void main(String[] args) throws IOException {
 		/*
 		   아래의 메소드 호출은 앞으로 표준 입력(키보드) 대신 input.txt 파일로부터 읽어오겠다는 의미의 코드입니다.
@@ -27,14 +35,33 @@ public class Solution {
 
         for (int test_case = 1; test_case <= T; test_case++) {
             String[] s1 = br.readLine().split(" ");
-            int row = Integer.parseInt(s1[0]);
-            int col = Integer.parseInt(s1[1]);
+            row = Integer.parseInt(s1[0]);
+            col = Integer.parseInt(s1[1]);
 
-            char[][] arr = new char[row][col];
+            arr = new char[row][col];
             for(int i = 0; i < row; i++) {
                 String s2 = br.readLine();
                 for(int j = 0; j < col; j++) {
                     arr[i][j] = s2.charAt(j);
+                }
+            }
+
+            tankRow = 0;
+            tankCol = 0;
+            dir = 0;
+            for(int i = 0; i < row; i++) {
+                for(int j = 0; j < col; j++) {
+                    if(arr[i][j] == '^' || arr[i][j] == 'v' || arr[i][j] == '<' || arr[i][j] == '>') {
+                        tankRow = i;
+                        tankCol = j;
+                        if(arr[i][j] == 'v') {
+                            dir = 1;
+                        } else if(arr[i][j] == '<') {
+                            dir = 2;
+                        } else if(arr[i][j] == '>') {
+                            dir = 3;
+                        }
+                    }
                 }
             }
 
@@ -45,19 +72,19 @@ public class Solution {
                 char command = commands.charAt(i);
                 switch(command) {
                     case 'U':
-                        u(arr, row, col);
+                        move(0);
                         break;
                     case 'D':
-                        d(arr, row, col);
+                        move(1);
                         break;
                     case 'L':
-                        l(arr, row, col);
+                        move(2);
                         break;
                     case 'R':
-                        r(arr, row, col);
+                        move(3);
                         break;
                     case 'S':
-                        s(arr, row, col);
+                        shoot();
                         break;
                 }
             }
@@ -69,111 +96,38 @@ public class Solution {
         }
     }
 
-    static void u(char[][] arr, int row, int col) {
-        for(int i = 0; i < row; i++) {
-            for(int j = 0; j < col; j++) {
-                if(arr[i][j] == '^' || arr[i][j] == 'v' || arr[i][j] == '<' || arr[i][j] == '>') {
-                    arr[i][j] = '^';
-                    if(i-1 >= 0 && arr[i-1][j] == '.') {
-                        arr[i-1][j] = '^';
-                        arr[i][j] = '.';
-                        return;
-                    }
-                }
+    static void move(int commandDir) {
+        dir = commandDir;
+        arr[tankRow][tankCol] = tank[dir];
+
+        int nextRow = tankRow + dRow[dir];
+        int nextCol = tankCol + dCol[dir];
+
+        if(nextRow >= 0 && nextCol >= 0 && nextRow < row && nextCol < col) {
+            if(arr[nextRow][nextCol] == '.') {
+                arr[tankRow][tankCol] = '.';
+                tankRow = nextRow;
+                tankCol = nextCol;
+                arr[tankRow][tankCol] = tank[dir];
             }
         }
     }
 
-    static void d(char[][] arr, int row, int col) {
-        for(int i = 0; i < row; i++) {
-            for(int j = 0; j < col; j++) {
-                if(arr[i][j] == '^' || arr[i][j] == 'v' || arr[i][j] == '<' || arr[i][j] == '>') {
-                    arr[i][j] = 'v';
-                    if(i+1 < row && arr[i+1][j] == '.') {
-                        arr[i+1][j] = 'v';
-                        arr[i][j] = '.';
-                        return;
-                    }
-                }
+    static void shoot() {
+        int nextRow = tankRow + dRow[dir];
+        int nextCol = tankCol + dCol[dir];
+
+        while(nextRow >= 0 && nextCol >= 0 && nextRow < row && nextCol < col) {
+            if (arr[nextRow][nextCol] == '#') {
+                break;
             }
+            if (arr[nextRow][nextCol] == '*') {
+                arr[nextRow][nextCol] = '.';
+                break;
+            }
+            nextRow += dRow[dir];
+            nextCol += dCol[dir];
         }
     }
 
-    static void l(char[][] arr, int row, int col) {
-        for(int i = 0; i < row; i++) {
-            for(int j = 0; j < col; j++) {
-                if(arr[i][j] == '^' || arr[i][j] == 'v' || arr[i][j] == '<' || arr[i][j] == '>') {
-                    arr[i][j] = '<';
-                    if(j-1 >= 0 && arr[i][j-1] == '.') {
-                        arr[i][j-1] = '<';
-                        arr[i][j] = '.';
-                        return;
-                    }
-                }
-            }
-        }
-    }
-
-    static void r(char[][] arr, int row, int col) {
-        for(int i = 0; i < row; i++) {
-            for(int j = 0; j < col; j++) {
-                if(arr[i][j] == '^' || arr[i][j] == 'v' || arr[i][j] == '<' || arr[i][j] == '>') {
-                    arr[i][j] = '>';
-                    if(j+1 < col && arr[i][j+1] == '.') {
-                        arr[i][j+1] = '>';
-                        arr[i][j] = '.';
-                        return;
-                    }
-                }
-            }
-        }
-    }
-
-    static void s(char[][] arr, int row, int col) {
-        for(int i = 0; i < row; i++) {
-            for(int j = 0; j < col; j++) {
-                if(arr[i][j] == '^') {
-                    for(int k = i; k >= 0; k--) {
-                        if(arr[k][j] == '#') {
-                            break;
-                        }
-                        if(arr[k][j] == '*') {
-                            arr[k][j] = '.';
-                            break;
-                        }
-                    }
-                } else if(arr[i][j] == 'v') {
-                    for(int k = i; k < row; k++) {
-                        if(arr[k][j] == '#') {
-                            break;
-                        }
-                        if(arr[k][j] == '*') {
-                            arr[k][j] = '.';
-                            break;
-                        }
-                    }
-                } else if(arr[i][j] == '<') {
-                    for(int k = j; k >= 0; k--) {
-                        if(arr[i][k] == '#') {
-                            break;
-                        }
-                        if(arr[i][k] == '*') {
-                            arr[i][k] = '.';
-                            break;
-                        }
-                    }
-                } else if(arr[i][j] == '>') {
-                    for(int k = j; k < col; k++) {
-                        if(arr[i][k] == '#') {
-                            break;
-                        }
-                        if(arr[i][k] == '*') {
-                            arr[i][k] = '.';
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-    }
 }
