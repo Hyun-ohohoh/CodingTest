@@ -5,23 +5,23 @@ class Solution {
 
         Arrays.sort(A);
         Arrays.sort(B);
-        int result = 0;
 
         int indexA = A.length - 1;
         int indexB = B.length - 1;
-
-        while(indexB >= 0 && indexA >= 0) {
-            if(B[indexB] > A[indexA]) {
-                result += 1;
+        
+        int score = 0;
+        while(indexA >= 0 && indexB >= 0) {
+            if(A[indexA] < B[indexB]) {
+                score += 1;
                 indexA -= 1;
                 indexB -= 1;
-            } else if(B[indexB] <= A[indexA]) {
+            } else {
                 indexA -= 1;
             }
         }
-
-        return result;
-
+        
+        return score;
     }
+
 
 }
