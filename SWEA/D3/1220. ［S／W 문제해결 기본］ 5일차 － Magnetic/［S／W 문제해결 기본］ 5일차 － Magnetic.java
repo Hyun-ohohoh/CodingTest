@@ -28,7 +28,7 @@ public class Solution {
         for (int test_case = 1; test_case <= T; test_case++) {
             int n = Integer.parseInt(br.readLine());
 
-            int[][] arr = new int[n][n]; //전치 배열
+            int[][] arr = new int[n][n]; 
             for(int i = 0; i < n; i++) {
                 StringTokenizer st = new StringTokenizer(br.readLine());
                 for(int j = 0; j < n; j++) {
