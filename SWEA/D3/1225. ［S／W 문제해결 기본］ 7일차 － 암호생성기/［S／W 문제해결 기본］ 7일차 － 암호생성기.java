@@ -37,10 +37,11 @@ public class Solution {
             }
 
             int num = 1;
+            int cycle = 5;
             while(true) {
                 int value = queue.pollFirst();
-                if(num > 5) {
-                    num %= 5;
+                if(num > cycle) {
+                    num %= cycle;
                 }
                 if(value - num <= 0) {
                     queue.offer(0);
