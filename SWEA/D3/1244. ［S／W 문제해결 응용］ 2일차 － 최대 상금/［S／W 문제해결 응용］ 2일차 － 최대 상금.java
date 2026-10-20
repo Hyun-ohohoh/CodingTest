@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashSet;
@@ -34,17 +33,16 @@ public class Solution {
 
         for (int test_case = 1; test_case <= T; test_case++) {
             String[] input = br.readLine().split(" ");
+            String num = input[0];
+            n = Integer.parseInt(input[1]);
 
-            arr = new int[input[0].length()];
-            for(int i = 0; i < input[0].length(); i++) {
-                arr[i] = input[0].charAt(i) - '0';
+            arr = new int[num.length()];
+            for(int i = 0; i < num.length(); i++) {
+                arr[i] = num.charAt(i) - '0';
             }
 
-            n = Integer.parseInt(input[1]);
+            set.clear(); // 테스트 케이스 마다 set 비워주기
             max = 0;
-            set.clear();
-
-            Set<String> set = new HashSet<>();
             dfs(0);
 
             System.out.println("#" + test_case + " " + max);
@@ -53,11 +51,10 @@ public class Solution {
 
     static void dfs(int depth) {
         StringBuilder sb = new StringBuilder();
-        sb.append(depth).append(":");
+        sb.append(depth).append("|");
         for(int i = 0; i < arr.length; i++) {
             sb.append(arr[i]);
         }
-
         String key = sb.toString();
         if(set.contains(key)) {
             return;
@@ -67,11 +64,11 @@ public class Solution {
 
         if(depth == n) {
             int num = 0;
-            int multiple = 1;
+            int mutiple = 1;
 
-            for(int i = arr.length - 1; i >= 0; i--) {
-                num += arr[i] * multiple;
-                multiple *= 10;
+            for(int i = arr.length-1; i >= 0; i--) {
+                num += arr[i] * mutiple;
+                mutiple *= 10;
             }
 
             if(num > max) {
@@ -85,7 +82,9 @@ public class Solution {
                 int value = arr[i];
                 arr[i] = arr[j];
                 arr[j] = value;
+
                 dfs(depth + 1);
+
                 value = arr[i];
                 arr[i] = arr[j];
                 arr[j] = value;
@@ -93,3 +92,4 @@ public class Solution {
         }
     }
 }
+
