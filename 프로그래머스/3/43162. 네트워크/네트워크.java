@@ -1,34 +1,46 @@
 class Solution {
-    
-    static boolean[] visited;
 
+    static int[] parent;
+   
     public int solution(int n, int[][] computers) {
-        int count = 0;
-        visited = new boolean[n];
 
+        int result = 0;
+        parent = new int[n];
         for(int i = 0; i < n; i++) {
-            if(!visited[i]) {
-                count += 1;
-                dfs(i, n, computers);
+            parent[i] = i;
+        }
+        
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < n; j++) {
+                if(computers[i][j] == 1) {
+                    union(i, j);
+                }
             }
         }
-
-        return count;
-
-    }
-
-    void dfs(int value, int n, int[][] computers) {
-        if(visited[value]) {
-            return;
-        }
-
-        visited[value] = true;
+        
         for(int i = 0; i < n; i++) {
-            if(computers[value][i] == 1 && !visited[i]) {
-                dfs(i, n, computers);
+            if(parent[i] == i) {
+                result += 1;
             }
         }
-
+        
+        return result;
     }
 
+    int find(int x) {
+        if(parent[x] != x) {
+            parent[x] = find(parent[x]);
+        }
+        return parent[x];
+    }
+
+    boolean union(int a, int b) {
+        int parentA = find(a);
+        int parentB = find(b);
+        if(parentA == parentB) {
+            return false;
+        }
+        parent[parentA] = parentB;
+        return true;
+    }
 }
