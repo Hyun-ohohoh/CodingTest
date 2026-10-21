@@ -1,50 +1,70 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.PriorityQueue;
+
 class Solution {
-     public int solution(int n, int s, int a, int b, int[][] fares) {
+
+    static List<List<int[]>> list;
+    public int solution(int n, int s, int a, int b, int[][] fares) {
+
+        list = new ArrayList<>();
+        for(int i = 0; i <= n; i++) {
+            list.add(new ArrayList<>());
+        }
+
+        for(int i = 0; i < fares.length; i++) {
+            int[] current = fares[i];
+            int from = current[0];
+            int to = current[1];
+            int cost = current[2];
+
+            list.get(from).add(new int[] {to, cost});
+            list.get(to).add(new int[] {from, cost});
+        }
+
+        int[] distanceS = shortSearch(n, s);
+        int[] distanceA = shortSearch(n ,a);
+        int[] distanceB = shortSearch(n, b);
 
 
-        int[][] graph = new int[n+1][n+1];
-
+        int result = Integer.MAX_VALUE;
         for(int i = 1; i <= n; i++) {
-            for(int j = 1; j <= n; j++) {
-                if(i == j) graph[i][j] = 0;
-                else graph[i][j] = Integer.MAX_VALUE;  // 연결 안 된 경우
+            result = Math.min(distanceS[i] + distanceA[i] + distanceB[i], result);
+        }
+        
+        return result;
+
+    }
+
+    int[] shortSearch(int n, int point) {
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a1, b1) -> a1[1] - b1[1]);
+        int[] distance = new int[n+1];
+        Arrays.fill(distance, Integer.MAX_VALUE);
+        distance[point] = 0;
+
+        pq.add(new int[] {point, 0});
+        while(!pq.isEmpty()) {
+            int[] current = pq.poll();
+            int node = current[0];
+            int cost = current[1];
+
+            if(cost > distance[node]) {
+                continue;
             }
-        }
 
-        for(int i = 1; i <= fares.length; i++) {
-            int from = fares[i-1][0];
-            int to = fares[i-1][1];
-            int price = fares[i-1][2];
+            for(int[] next : list.get(node)) {
+                int nextNode = next[0];
+                int nextCost = next[1];
 
-            graph[from][to] = price;
-            graph[to][from] = price;
-        }
-
-        // 플로이드 - 워셜
-        // 경유지
-        for(int k = 1; k <= n; k++) {
-            // 출발지
-            for(int i = 1; i <= n; i++) {
-                // 도착지
-                for(int j = 1; j <= n; j++) {
-                    if(graph[i][k] != Integer.MAX_VALUE && graph[k][j] != Integer.MAX_VALUE) {
-                        graph[i][j] = Math.min(graph[i][j], graph[i][k] + graph[k][j]);
-                    }
+                if(cost + nextCost < distance[nextNode]) {
+                    distance[nextNode] = cost + nextCost;
+                    pq.add(new int[] {nextNode, distance[nextNode]});
                 }
             }
         }
 
-        int result = Integer.MAX_VALUE;
-        for(int k = 1; k <= n; k++) {
-            int distance = graph[s][k];
-
-            distance += graph[k][a];
-            distance += graph[k][b];
-
-            result = Math.min(distance, result);
-        }
-
-        return result;
-
+        return distance;
     }
+
 }
