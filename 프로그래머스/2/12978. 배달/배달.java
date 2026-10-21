@@ -1,38 +1,57 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.PriorityQueue;
+
 class Solution {
+
     public int solution(int N, int[][] road, int K) {
 
-        int[][] graph = new int[N+1][N+1];
-
-        for(int i = 1; i <= N; i++) {
-            for(int j = 1; j <= N; j++) {
-                if(i == j) graph[i][j] = 0;
-                else graph[i][j] = Integer.MAX_VALUE;
-            }
+        List<List<int[]>> adjList = new ArrayList<>();
+        for(int i = 0; i <= N; i++) {
+            adjList.add(new ArrayList<>());
         }
 
         for(int i = 0; i < road.length; i++) {
-            int from = road[i][0];
-            int to = road[i][1];
-            int time = road[i][2];
+            int[] way = road[i];
+            int from = way[0];
+            int to = way[1];
+            int cost = way[2];
 
-            // 두 마을 a, b를 연결하는 도로는 여러 개가 있을 수 있음(문제 조건)
-            graph[from][to] = Math.min(graph[from][to], time);
-            graph[to][from] = Math.min(graph[to][from], time);
+            adjList.get(from).add(new int[] {to, cost});
+            adjList.get(to).add(new int[] {from, cost});
         }
 
-        for(int k = 1; k <= N; k++) {
-            for(int i = 1; i <= N; i++) {
-                for(int j = 1; j <= N; j++) {
-                    if(graph[i][k] != Integer.MAX_VALUE && graph[k][j] != Integer.MAX_VALUE) {
-                        graph[i][j] = Math.min(graph[i][j], graph[i][k] + graph[k][j]);
-                    }
+        int[] distance = new int[N+1];
+        Arrays.fill(distance, Integer.MAX_VALUE);
+        distance[1] = 0;
+
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+        pq.add(new int[] {1, 0});
+
+        while(!pq.isEmpty()) {
+            int[] current = pq.poll();
+            int node = current[0];
+            int cost = current[1];
+
+            if(cost > distance[node]) {
+                continue;
+            }
+
+            for(int[] next : adjList.get(node)) {
+                int nextNode = next[0];
+                int nextCost = next[1];
+
+                if(distance[nextNode] > cost + nextCost) {
+                    distance[nextNode] = cost + nextCost;
+                    pq.add(new int[] {nextNode, distance[nextNode]});
                 }
             }
         }
 
         int result = 0;
         for(int i = 1; i <= N; i++) {
-            if(graph[1][i] <= K) {
+            if(distance[i] <= K) {
                 result += 1;
             }
         }
@@ -40,3 +59,4 @@ class Solution {
         return result;
     }
 }
+
