@@ -19,7 +19,7 @@ class Solution {
         }
         
         int[] result = new int[sources.length];
-        int[] distance = shortSearch(n, destination);
+        int[] distance = bfs(n, destination);
         
         for(int i = 0; i < sources.length; i++) {
             result[i] = distance[sources[i]];
@@ -30,36 +30,22 @@ class Solution {
         
     }
     
-    int[] shortSearch(int n, int point) {
+    int[] bfs(int n, int point) {
         int[] distance = new int[n+1];
-        Arrays.fill(distance, Integer.MAX_VALUE);
+        Arrays.fill(distance, -1);
         distance[point] = 0;
         
-        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
-        pq.add(new int[] {point , 0});
+        Deque<Integer> queue = new ArrayDeque<>(); 
+        queue.offer(point);
         
-        while(!pq.isEmpty()) {
-            int[] current = pq.poll();
-            int node = current[0];
-            int cost = current[1];
-            
-            if(cost > distance[node]) {
-                continue;
-            }
+        while(!queue.isEmpty()) {
+            int node = queue.poll();
             
             for(int next : list.get(node)) {
-                int nextCost = 1;
-                
-                if(cost + nextCost < distance[next]) {
-                    distance[next] = cost + nextCost;
-                    pq.add(new int[] {next, distance[next]});
-                }
-            }
-        }
-        
-        for(int i = 0; i < distance.length; i++) {
-            if(distance[i] == Integer.MAX_VALUE) {
-                distance[i] = -1;
+                if(distance[next] == -1) { //처음 방문했을 때 
+                    distance[next] = distance[node] + 1;
+                    queue.offer(next);
+                }   
             }
         }
         
