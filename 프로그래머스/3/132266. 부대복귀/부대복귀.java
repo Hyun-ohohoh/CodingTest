@@ -22,13 +22,9 @@ class Solution {
         int[] distance = shortSearch(n, destination);
         
         for(int i = 0; i < sources.length; i++) {
-            int source = sources[i];
-            for(int j = 0; j < distance.length; j++) {
-                if(j == source) {
-                    result[i] = distance[j];
-                }
-            }
+            result[i] = distance[sources[i]];
         }
+        
         
         return result;
         
