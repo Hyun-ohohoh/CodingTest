@@ -1,9 +1,10 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
 
 public class Solution {
+
+    static int result;
 
     public static void main(String[] args) throws IOException {
 		/*
@@ -13,7 +14,7 @@ public class Solution {
 		   따라서 테스트를 수행할 때에는 아래 주석을 지우고 이 메소드를 사용하셔도 좋습니다.
 		   단, 채점을 위해 코드를 제출하실 때에는 반드시 이 메소드를 지우거나 주석 처리 하셔야 합니다.
 		 */
-        //System.setIn(new FileInputStream("/Users/hyun-oh/Downloads/input.txt"));
+        //System.setIn(new FileInputStream("/Users/hyun-oh/Downloads/sample_input.txt"));
 
 		/*
 		   표준입력 System.in 으로부터 스캐너를 만들어 데이터를 읽어옵니다.
@@ -24,6 +25,8 @@ public class Solution {
 		/*
 		   여러 개의 테스트 케이스가 주어지므로, 각각을 처리합니다.
 		*/
+
+        // 오른쪽, 아래, 왼쪽, 위
         int[] dRow = {0, 1, 0, -1};
         int[] dCol = {1, 0, -1, 0};
         for (int test_case = 1; test_case <= T; test_case++) {
@@ -32,25 +35,22 @@ public class Solution {
 
             int row = 0;
             int col = 0;
-            int num = 1;
+            int value = 1;
             int dir = 0;
-
-            for(int i = 0; i < n*n; i++) {
-                arr[row][col] = num;
-                num += 1;
-
+            while(value <= n*n) {
+                arr[row][col] = value;
+                value += 1;
                 int nextRow = row + dRow[dir];
                 int nextCol = col + dCol[dir];
 
-                if(nextRow < 0 || nextCol < 0 || nextRow >= n || nextCol >= n || arr[nextRow][nextCol] != 0) {
-                    dir = (dir+1) % 4;
-                    nextRow = row + dRow[dir];
-                    nextCol = col + dCol[dir];
+                if (nextRow >= n || nextCol >= n || nextRow < 0 || nextCol < 0 || arr[nextRow][nextCol] != 0) {
+                    dir = (dir + 1) % 4;
+                    row += dRow[dir];
+                    col += dCol[dir];
+                } else {
+                    row += dRow[dir];
+                    col += dCol[dir];
                 }
-
-                row = nextRow;
-                col = nextCol;
-
             }
 
             System.out.println("#" + test_case);
@@ -60,7 +60,6 @@ public class Solution {
                 }
                 System.out.println();
             }
-
         }
     }
 }
