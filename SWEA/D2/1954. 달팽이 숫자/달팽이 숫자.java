@@ -4,8 +4,6 @@ import java.io.InputStreamReader;
 
 public class Solution {
 
-    static int result;
-
     public static void main(String[] args) throws IOException {
 		/*
 		   아래의 메소드 호출은 앞으로 표준 입력(키보드) 대신 input.txt 파일로부터 읽어오겠다는 의미의 코드입니다.
@@ -26,31 +24,33 @@ public class Solution {
 		   여러 개의 테스트 케이스가 주어지므로, 각각을 처리합니다.
 		*/
 
-        // 오른쪽, 아래, 왼쪽, 위
-        int[] dRow = {0, 1, 0, -1};
-        int[] dCol = {1, 0, -1, 0};
         for (int test_case = 1; test_case <= T; test_case++) {
             int n = Integer.parseInt(br.readLine());
             int[][] arr = new int[n][n];
 
+
+
+            int[] dRow = {0, 1, 0, -1};
+            int[] dCol = {1, 0, -1, 0};
+            int dir = 0; // 오른쪽, 아래, 왼쪽, 위
+            int num = 1;
             int row = 0;
             int col = 0;
-            int value = 1;
-            int dir = 0;
-            while(value <= n*n) {
-                arr[row][col] = value;
-                value += 1;
+            for(int i = num; i <= n*n; i++) {
+                arr[row][col] = num;
+
                 int nextRow = row + dRow[dir];
                 int nextCol = col + dCol[dir];
 
-                if (nextRow >= n || nextCol >= n || nextRow < 0 || nextCol < 0 || arr[nextRow][nextCol] != 0) {
+                if(nextRow < 0 || nextRow >= n || nextCol < 0 || nextCol >= n || arr[nextRow][nextCol] != 0) {
                     dir = (dir + 1) % 4;
-                    row += dRow[dir];
-                    col += dCol[dir];
-                } else {
-                    row += dRow[dir];
-                    col += dCol[dir];
+                    nextRow = row + dRow[dir];
+                    nextCol = col + dCol[dir];
                 }
+
+                row = nextRow;
+                col = nextCol;
+                num += 1;
             }
 
             System.out.println("#" + test_case);
@@ -63,4 +63,3 @@ public class Solution {
         }
     }
 }
-
