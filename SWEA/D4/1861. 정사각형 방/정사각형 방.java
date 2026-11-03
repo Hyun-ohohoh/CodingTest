@@ -27,8 +27,8 @@ public class Solution {
 
         for (int test_case = 1; test_case <= T; test_case++) {
             n = Integer.parseInt(br.readLine());
-            int[][] arr = new int[n][n];
 
+            int[][] arr = new int[n][n];
             for(int i = 0; i < n; i++) {
                 StringTokenizer st = new StringTokenizer(br.readLine());
                 for(int j = 0; j < n; j++) {
@@ -41,20 +41,20 @@ public class Solution {
             int resultCol = 0;
             for(int i = 0; i < n; i++) {
                 for(int j = 0; j < n; j++) {
-                    int count = search(arr, i, j);
-                    if(count > result) {
-                        result = count;
-                        resultRow = i;
-                        resultCol = j;
-                    } else if(count == result) {
-                        if(arr[resultRow][resultCol] > arr[i][j]) {
-                            resultRow = i;
-                            resultCol = j;
-                        }
-                    }
+                   if(result < search(arr, i, j)) {
+                       result = search(arr, i ,j);
+                       resultRow = i;
+                       resultCol = j;
+                   } else if(result == search(arr, i, j)) {
+                       if(arr[resultRow][resultCol] > arr[i][j]) {
+                           resultRow = i;
+                           resultCol = j;
+                       }
+                   }
                 }
             }
-            System.out.println("#" + test_case + " " + arr[resultRow][resultCol] + " "  + result);
+
+            System.out.println("#" + test_case + " "  + arr[resultRow][resultCol] + " " + result);
         }
     }
 
@@ -65,14 +65,15 @@ public class Solution {
     static int search(int[][] arr, int row, int col) {
         int current = arr[row][col];
 
-        for (int i = 0; i < 4; i++) {
+        for(int i = 0; i < 4; i++) {
             int nextRow = row + dRow[i];
             int nextCol = col + dCol[i];
-            if (nextRow < 0 || nextCol < 0 || nextRow >= n || nextCol >= n) {
+
+            if(nextRow >= n || nextCol >= n || nextRow < 0 || nextCol < 0) {
                 continue;
             }
 
-            if (arr[nextRow][nextCol] == current + 1) {
+            if(current + 1 == arr[nextRow][nextCol]) {
                 return 1 + search(arr, nextRow, nextCol);
             }
         }
