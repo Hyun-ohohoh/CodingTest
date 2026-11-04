@@ -27,26 +27,25 @@ public class Solution {
 
         for (int test_case = 1; test_case <= T; test_case++) {
             int n = Integer.parseInt(br.readLine());
-            int[] arr = new int[n];
 
+            int[] arr = new int[n];
             StringTokenizer st = new StringTokenizer(br.readLine());
             for(int i = 0; i < n; i++) {
                 arr[i] = Integer.parseInt(st.nextToken());
             }
 
+            long result = 0;
             int max = arr[n-1];
-            long profit = 0; //n 최대 100만, 가격 최대: 1만
             for(int i = n-2; i >= 0; i--) {
                 if(arr[i] < max) {
-                    profit += max - arr[i];
-                }
-
-                if(arr[i] > max) {
+                    result += max - arr[i];
+                } else {
                     max = arr[i];
                 }
             }
 
-            System.out.println("#" + test_case + " " + profit);
+            System.out.println("#" + test_case + " "  + result);
         }
     }
 }
+
