@@ -40,12 +40,8 @@ public class Solution {
             int exclude = n / 2;
             int count = 1; // 한 행당 포함되는 수
             for(int i = 0; i < half; i++) {
-                for(int j = 0; j < n; j++) {
-                    if(j == exclude) {
-                        for(int k = j; k < j+count; k++) {
-                            result += arr[i][k];
-                        }
-                    }
+                for(int j = exclude; j < exclude+count; j++) {
+                    result += arr[i][j];
                 }
                 exclude -= 1;
                 count += 2;
@@ -58,12 +54,8 @@ public class Solution {
             exclude = 1;
             count = n - 2;
             for(int i = half+1; i < n; i++) {
-                for(int j = 0; j < n; j++) {
-                    if(j == exclude) {
-                        for(int k = j; k < j+count; k++) {
-                            result += arr[i][k];
-                        }
-                    }
+                for(int j = exclude; j < exclude+count; j++) {
+                    result += arr[i][j];
                 }
                 exclude += 1;
                 count -= 2;
