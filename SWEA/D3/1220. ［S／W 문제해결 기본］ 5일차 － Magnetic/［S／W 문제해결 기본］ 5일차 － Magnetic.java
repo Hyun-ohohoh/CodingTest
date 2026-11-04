@@ -1,7 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.StringTokenizer;
 
 public class Solution {
 
@@ -13,7 +13,7 @@ public class Solution {
 		   따라서 테스트를 수행할 때에는 아래 주석을 지우고 이 메소드를 사용하셔도 좋습니다.
 		   단, 채점을 위해 코드를 제출하실 때에는 반드시 이 메소드를 지우거나 주석 처리 하셔야 합니다.
 		 */
-        //System.setIn(new FileInputStream("/Users/hyun-oh/Downloads/input.txt"));
+        //System.setIn(new FileInputStream("/Users/hyun-oh/Downloads/sample_input.txt"));
 
 		/*
 		   표준입력 System.in 으로부터 스캐너를 만들어 데이터를 읽어옵니다.
@@ -27,15 +27,15 @@ public class Solution {
 
         for (int test_case = 1; test_case <= T; test_case++) {
             int n = Integer.parseInt(br.readLine());
+            int[][] arr = new int[n][n];
 
-            int[][] arr = new int[n][n]; 
             for(int i = 0; i < n; i++) {
                 StringTokenizer st = new StringTokenizer(br.readLine());
                 for(int j = 0; j < n; j++) {
                     arr[i][j] = Integer.parseInt(st.nextToken());
                 }
             }
-
+            
             int result = 0;
             for(int i = 0; i < n; i++) {
                 boolean num1 = false;
@@ -43,18 +43,14 @@ public class Solution {
                     if(arr[j][i] == 1) {
                         num1 = true;
                     }
-                    
-                    if(num1) {
-                        if(arr[j][i] == 2) {
-                            result += 1;
-                            num1 = false;
-                        }
+                        
+                    if(num1 && arr[j][i] == 2) {
+                        result += 1;
+                        num1 = false;
                     }
                 }
             }
-            
             System.out.println("#" + test_case + " " + result);
         }
     }
-
 }
