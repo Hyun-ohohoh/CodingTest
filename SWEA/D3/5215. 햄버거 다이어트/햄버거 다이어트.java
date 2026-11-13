@@ -5,8 +5,6 @@ import java.util.StringTokenizer;
 
 public class Solution {
 
-    static int result;
-
     public static void main(String[] args) throws IOException {
 		/*
 		   아래의 메소드 호출은 앞으로 표준 입력(키보드) 대신 input.txt 파일로부터 읽어오겠다는 의미의 코드입니다.
@@ -33,38 +31,30 @@ public class Solution {
             int l = Integer.parseInt(st.nextToken());
 
             int[][] arr = new int[n][2];
+
+            int maxCalorie = 0;
             for(int i = 0; i < n; i++) {
                 st = new StringTokenizer(br.readLine());
-                int t = Integer.parseInt(st.nextToken());
-                int k = Integer.parseInt(st.nextToken());
+                arr[i][0] = Integer.parseInt(st.nextToken());
+                arr[i][1] = Integer.parseInt(st.nextToken());
 
-                arr[i][0] = t;
-                arr[i][1] = k;
+                if(arr[i][1] > maxCalorie) {
+                    maxCalorie = arr[i][1];
+                }
             }
 
-            result = 0;
-            select(n, l, arr, 0, 0, 0);
-
-            System.out.println("#" + test_case + " " + result);
-
-        }
-    }
-
-    static void select(int n, int l, int[][] arr, int scoreSum, int caloSum, int index) {
-        if(index == n) {
-            if(scoreSum > result) {
-                result = scoreSum;
+            int[] score = new int[l+1];
+            for(int i = 0; i < n; i++) {
+                int currentScore = arr[i][0];
+                int currentCalo = arr[i][1];
+                for(int j = l; j >= currentCalo; j--) {
+                    // l에서 부터 줄이면서
+                    // 선택 안하거나(기존 배열 값), 선택 하거나(점수 만큼 뺀 값(그 전값) + 점수)
+                    score[j] = Math.max(score[j], score[j-currentCalo] + currentScore);
+                }
             }
-            return;
-        }
 
-        // 선택
-        if(caloSum + arr[index][1] <= l) {
-            select(n, l, arr, scoreSum + arr[index][0], caloSum + arr[index][1], index+1);
+            System.out.println("#" + test_case + " "  + score[l]);
         }
-
-        //선택 안함
-        select(n, l, arr, scoreSum, caloSum, index+1);
     }
-
 }
